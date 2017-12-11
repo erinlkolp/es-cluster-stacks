@@ -1,0 +1,98 @@
+version: '3'
+
+services:
+  elasticsearch:
+    image: itzg/elasticsearch
+    environment:
+      TYPE: MASTER
+      UNICAST_HOSTS: elasticsearch
+      MIN_MASTERS: 1
+    volumes:
+      - /mnt/nfs/es-data/:/data
+      - /mnt/nfs/es-config:/conf
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+
+  slave0:
+    image: itzg/elasticsearch
+    environment:
+      TYPE: DATA
+      UNICAST_HOSTS: elasticsearch
+    volumes:
+      - /mnt/nfs/es-slave0/:/data
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 60s
+
+  slave1:
+    image: itzg/elasticsearch
+    environment:
+      TYPE: DATA
+      UNICAST_HOSTS: elasticsearch
+    volumes:
+      - /mnt/nfs/es-slave1/:/data
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 60s
+
+  slave2:
+    image: itzg/elasticsearch
+    environment:
+      TYPE: DATA
+      UNICAST_HOSTS: elasticsearch
+    volumes:
+      - /mnt/nfs/es-slave2/:/data
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 60s
+
+  slave3:
+    image: itzg/elasticsearch
+    environment:
+      TYPE: DATA
+      UNICAST_HOSTS: elasticsearch
+    volumes:
+      - /mnt/nfs/es-slave3/:/data
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 60s
+
+  slave4:
+    image: itzg/elasticsearch
+    environment:
+      TYPE: DATA
+      UNICAST_HOSTS: elasticsearch
+    volumes:
+      - /mnt/nfs/es-slave4/:/data
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 60s
+
+  gateway:
+    image: itzg/elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      TYPE: GATEWAY
+      UNICAST_HOSTS: elasticsearch
+
+  ingest:
+    image: itzg/elasticsearch
+    ports:
+      - "9222:9200"
+    environment:
+      TYPE: INGEST
+      UNICAST_HOSTS: elasticsearch
