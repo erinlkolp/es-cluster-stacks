@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  elasticsearch_master:
+    image: elasticsearch:2.4
+    command: "elasticsearch -Des.cluster.name=erin -Des.node.master=true -Des.node.data=false"
+    volumes:
+      - /home/ekolp/es-data-persist1:/usr/share/elasticsearch/data
+    environment:
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  elasticsearch1:
+    image: elasticsearch:2.4
+    command: "elasticsearch -Des.cluster.name=erin -Des.discovery.zen.ping.unicast.hosts=elasticsearch_master"
+    volumes:
+      - /home/ekolp/es-data-persist2:/usr/share/elasticsearch/data
+    links:
+      - elasticsearch_master
+    environment:
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+
+  elasticsearch2:
+    image: elasticsearch:2.4
+    command: "elasticsearch -Des.cluster.name=erin -Des.discovery.zen.ping.unicast.hosts=elasticsearch_master"
+    volumes:
+      - /home/ekolp/es-data-persist3:/usr/share/elasticsearch/data
+    links:
+      - elasticsearch_master
+    environment:
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+

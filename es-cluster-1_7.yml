@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  elasticsearch_master:
+    image: elasticsearch:1.7
+    command: "elasticsearch"
+    environment:
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+      - es.cluster.name=erin
+      - es.node.master=true
+      - es.node.data=false
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  elasticsearch1:
+    image: elasticsearch:1.7
+    command: "elasticsearch"
+    links:
+      - elasticsearch_master
+    volumes:
+      - "/opt/elasticsearch/data"
+    environment:
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+      - es.cluster.name=erin
+      - es.discovery.zen.ping.unicast.hosts=elasticsearch_master
+
+  elasticsearch2:
+    image: elasticsearch:1.7
+    command: "elasticsearch"
+    links:
+      - elasticsearch_master
+    volumes:
+      - "/opt/elasticsearch/data"
+    environment:
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+      - es.cluster.name=erin
+      - es.discovery.zen.ping.unicast.hosts=elasticsearch_master
+
